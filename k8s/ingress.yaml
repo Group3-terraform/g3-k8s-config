@@ -5,20 +5,18 @@ metadata:
   namespace: apps
   annotations:
     kubernetes.io/ingress.class: alb
+
+    # ALB configuration
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-
     alb.ingress.kubernetes.io/load-balancer-name: group3-dev-alb
 
-    # ACM certificate
+    # SSL / HTTPS
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-1:570430250751:certificate/44d724cd-3faf-4413-bbe0-dfe2f248b363
-
-    # Listener ports (HTTP + HTTPS)
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443},{"HTTP":80}]'
     alb.ingress.kubernetes.io/ssl-redirect: "443"
 
-    # FIXED health check
-    alb.ingress.kubernetes.io/healthcheck-path: /a/health
+    # Shared ALB settings
     alb.ingress.kubernetes.io/success-codes: '200'
 
 spec:
@@ -27,10 +25,35 @@ spec:
     - host: api.dev.theareak.click
       http:
         paths:
+          # =============================
+          # SERVICE A
+          # =============================
           - path: /a
             pathType: Prefix
             backend:
               service:
                 name: service-a
+                port:
+                  number: 80
+
+          # =============================
+          # SERVICE B
+          # =============================
+          - path: /b
+            pathType: Prefix
+            backend:
+              service:
+                name: service-b
+                port:
+                  number: 80
+
+          # =============================
+          # SERVICE C
+          # =============================
+          - path: /c
+            pathType: Prefix
+            backend:
+              service:
+                name: service-c
                 port:
                   number: 80
