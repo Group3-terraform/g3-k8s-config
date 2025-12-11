@@ -33,7 +33,6 @@ spec:
                 name: service-a
                 port:
                   number: 80
-
           - path: /b
             pathType: Prefix
             backend:
@@ -41,7 +40,6 @@ spec:
                 name: service-b
                 port:
                   number: 80
-
           - path: /c
             pathType: Prefix
             backend:
