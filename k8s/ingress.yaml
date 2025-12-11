@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: apps-ingress
+  namespace: apps
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+
+    alb.ingress.kubernetes.io/load-balancer-name: group3-dev-alb
+
+    # ACM certificate
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-1:570430250751:certificate/44d724cd-3faf-4413-bbe0-dfe2f248b363
+
+    # Listener ports (HTTP + HTTPS)
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443},{"HTTP":80}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+
+    # FIXED health check
+    alb.ingress.kubernetes.io/healthcheck-path: /a/health
+    alb.ingress.kubernetes.io/success-codes: '200'
+
+spec:
+  ingressClassName: alb
+  rules:
+    - host: api.dev.theareak.click
+      http:
+        paths:
+          - path: /a
+            pathType: Prefix
+            backend:
+              service:
+                name: service-a
+                port:
+                  number: 80
