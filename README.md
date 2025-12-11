@@ -31,3 +31,12 @@ kubectl get pods -n apps
 /a  → service-a
 /b  → service-b
 /c  → service-c
+
+
+
+#create new service ex : service D
+kubectl apply -f apps/service-c-deploy.yaml
+====> deployment.apps/service-c created
+kubectl apply -f apps/service-c-svc.yaml 
+====> service/service-c created   
+and apply in jenkin.
